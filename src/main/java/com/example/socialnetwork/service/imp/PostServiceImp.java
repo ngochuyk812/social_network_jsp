@@ -19,6 +19,9 @@ import com.example.socialnetwork.service.UploadAwsService;
 import com.example.socialnetwork.utils.AmazonClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,7 +74,15 @@ public class PostServiceImp implements PostService {
         return post.toDTO();
     }
     public List<PostDTO> getAllPost(){
+        long startTime = System.currentTimeMillis();
+        System.out.println(startTime);
+//        Pageable pageable = PageRequest.of(0,10);
+//        List<Post> postDTOS = postRepository.findAll(pageable).getContent();
         List<Post> postDTOS = postRepository.findAll();
+
+        long endTime = System.currentTimeMillis();
+        long elapsedTimeInSeconds = (endTime - startTime) / 1000;
+        System.out.println(elapsedTimeInSeconds);
         return postDTOS.stream().map(tmp->tmp.toDTO()).toList();
     }
 }

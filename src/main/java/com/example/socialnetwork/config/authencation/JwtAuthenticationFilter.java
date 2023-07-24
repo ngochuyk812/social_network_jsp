@@ -51,17 +51,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if(checkToken){
                     String username = tokenProvider.getUsernameFromJWT(jwt);
                     System.out.println(username);
+                    UserDetails userDetails =(UserDetails) request.getSession().getAttribute("userValidate");
+                    if(userDetails == null || !userDetails.getUsername().equals(username)){
+                        userDetails = customUserDetailsService.loadUserByUsername(username);
+                    }
 
-                    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-                    if (userDetails != null) {
+                    if (userDetails != null ) {
                         UsernamePasswordAuthenticationToken
                                 authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContext context = SecurityContextHolder.createEmptyContext();
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                        request.getSession().setMaxInactiveInterval(10*60);
+                        request.getSession().setAttribute("userValidate", userDetails);
                         request.setAttribute("username", username);
                     }else{
                         exceptionError.errorNoToken(response, "Unknown User");
+                        request.getSession().removeAttribute("userValidate");
+
                         return;
                     }
                 }

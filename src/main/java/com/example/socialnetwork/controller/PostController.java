@@ -3,8 +3,10 @@ package com.example.socialnetwork.controller;
 
 import com.example.socialnetwork.DTO.PostDTO;
 import com.example.socialnetwork.DTO.UserDTO;
+import com.example.socialnetwork.model.Post;
 import com.example.socialnetwork.model.User;
 import com.example.socialnetwork.payload.request.PostData;
+import com.example.socialnetwork.repository.PostRepository;
 import com.example.socialnetwork.repository.UserRepository;
 import com.example.socialnetwork.service.FriendService;
 import com.example.socialnetwork.service.PostService;
@@ -32,6 +34,9 @@ public class PostController {
     private PostService postService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PostRepository postRepository;
+
     @Autowired
     private AmazonClient amazonClient;
     @PostMapping("/upload_post")
@@ -62,7 +67,7 @@ public class PostController {
 
     @GetMapping("/get_all")
     public ResponseEntity<?> GetPosts(){
-        return ResponseEntity.ok().body(postService.getAllPost());
+        return ResponseEntity.ok().body("postService.getAllPost()");
 
     }
 
